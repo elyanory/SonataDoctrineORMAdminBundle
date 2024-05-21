@@ -51,6 +51,11 @@ final class Pager extends BasePager
         return $this->resultsCount;
     }
 
+    public function displayCountResults(bool $rendering = true): int|string
+    {
+        return $this->countResults();
+    }
+
     public function init(): void
     {
         $query = $this->getQuery();

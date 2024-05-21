@@ -73,4 +73,27 @@ final class PagerTest extends TestCase
 
         static::assertSame(0, $pager->countResults());
     }
+
+    /**
+     * @phpstan-param class-string $className
+     *
+     * @dataProvider provideCountResultsCases
+     */
+    public function testDisplayCountResults(string $className): void
+    {
+        $em = TestEntityManagerFactory::create();
+        $schemaTool = new SchemaTool($em);
+        $schemaTool->createSchema([
+            $em->getClassMetadata($className),
+        ]);
+
+        $qb = $em->createQueryBuilder()->select('e')->from($className, 'e');
+        $pq = new ProxyQuery($qb);
+
+        $pager = new Pager();
+        $pager->setQuery($pq);
+        $pager->init();
+
+        static::assertSame(0, $pager->displayCountResults());
+    }
 }
